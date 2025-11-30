@@ -18,6 +18,8 @@ public class Message {
 
     // 6. 是否是系统消息
     private boolean isSystem;
+    // 7.本地备注
+    private String localRemark;
 
     // 构造函数
     public Message(int avatarResId, String nickname, String content, String time, int unreadCount, boolean isSystem) {
@@ -38,6 +40,9 @@ public class Message {
     public String getTime() { return time; }
     public int getUnreadCount() { return unreadCount; }
     public boolean isSystem() { return isSystem; }
+    public String getLocalRemark() {
+        return localRemark;
+    }
 
     public void setAvatarResId(int avatarResId) {
         this.avatarResId = avatarResId;
@@ -61,5 +66,9 @@ public class Message {
 
     public void setSystem(boolean system) {
         isSystem = system;
+    }
+
+    public void setLocalRemark(String localRemark) {
+        this.localRemark = localRemark;
     }
 }

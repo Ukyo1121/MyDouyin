@@ -16,11 +16,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     // 数据源：要展示的消息列表
     private List<Message> messageList = new ArrayList<>();
+    // 声明接口变量
+    private OnItemClickListener listener;
 
     // 更新数据的方法：当 ViewModel 有新数据时，调用这个方法刷新列表
     public void setDate(List<Message> list) {
         this.messageList = list;
         notifyDataSetChanged();
+    }
+    // 定义一个接口用于把点击事件传递出去
+    public interface OnItemClickListener {
+        void onItemClick(Message message);
+    }
+
+    // 暴露一个方法让外面设置监听器
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     // 创建 ViewHolder：负责加载 xml 布局文件
@@ -44,6 +55,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         // 调用 ViewHolder 里的方法进行显示
         holder.bind(message);
+        // 给整个 Item 设置点击事件
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(message);
+                }
+            }
+        });
     }
 
     // 告诉列表一共有多少条数据
@@ -63,7 +83,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         public void bind(Message message) {
             // 设置昵称
-            binding.tvNickname.setText(message.getNickname());
+            // 如果有本地备注就显示备注，否则显示原昵称
+            if (message.getLocalRemark() != null && !message.getLocalRemark().isEmpty()) {
+                binding.tvNickname.setText(message.getLocalRemark());
+            } else {
+                binding.tvNickname.setText(message.getNickname());
+            }
             // 设置内容
             binding.tvContent.setText(message.getContent());
             // 设置时间

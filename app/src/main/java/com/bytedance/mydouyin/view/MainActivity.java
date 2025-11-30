@@ -34,6 +34,20 @@ public class MainActivity extends AppCompatActivity {
 
         // 创建并设置 Adapter
         com.bytedance.mydouyin.view.MessageAdapter adapter = new com.bytedance.mydouyin.view.MessageAdapter();
+        // 设置点击监听
+        adapter.setOnItemClickListener(new com.bytedance.mydouyin.view.MessageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(com.bytedance.mydouyin.model.Message message) {
+                // 创建 Intent跳转到 RemarkActivity
+                android.content.Intent intent = new android.content.Intent(MainActivity.this, com.bytedance.mydouyin.view.RemarkActivity.class);
+
+                intent.putExtra("nickname", message.getNickname());
+
+                // 启动跳转
+                startActivity(intent);
+            }
+        });
+
         binding.rvMessageList.setAdapter(adapter);
 
         // 观察 ViewModel 的数据变化
@@ -86,5 +100,14 @@ public class MainActivity extends AppCompatActivity {
         });
         // 发起第一次数据加载
         viewModel.loadData();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 每次回到页面，都让 ViewModel 重新检查一下备注
+        if (viewModel != null) {
+            viewModel.reloadRemarks();
+        }
     }
 }

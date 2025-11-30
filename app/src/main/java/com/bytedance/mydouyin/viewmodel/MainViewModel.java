@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.AndroidViewModel;
 import com.bytedance.mydouyin.model.Message;
 import com.bytedance.mydouyin.R;
+import com.bytedance.mydouyin.model.RemarkDatabaseHelper;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,8 +29,10 @@ public class MainViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> isLoadingMoreState = new MutableLiveData<>();
     // 存放从 JSON 读出来的所有数据（模拟服务器数据库）
     private List<Message> allMessages = new ArrayList<>();
+    private RemarkDatabaseHelper dbHelper;
     public MainViewModel(@NonNull Application application) {
         super(application);
+        dbHelper = new RemarkDatabaseHelper(application);
     }
     // 读取本地 JSON 文件的方法
     private List<Message> readJsonFromAssets() {
@@ -59,11 +62,21 @@ public class MainViewModel extends AndroidViewModel {
             return new ArrayList<>();
         }
     }
+    // 把数据库里的备注同步到内存列表里
+    private void fillRemarks(List<Message> list) {
+        if (list == null) return;
+        for (Message msg : list) {
+            // 用昵称去数据库查备注
+            String remark = dbHelper.getRemark(msg.getNickname());
+            // 填入对象
+            msg.setLocalRemark(remark);
+        }
+    }
     // 加载数据的方法
     public void loadData() {
         // 拉取最新全量数据
         allMessages = readJsonFromAssets();
-
+        fillRemarks(allMessages);
         // 截取前 20 条展示
         List<Message> firstPage = new ArrayList<>();
         int count = Math.min(20, allMessages.size());
@@ -82,7 +95,7 @@ public class MainViewModel extends AndroidViewModel {
 
             // 重新读取数据
             allMessages = readJsonFromAssets();
-
+            fillRemarks(allMessages);
             List<Message> firstPage = new ArrayList<>();
             int count = Math.min(20, allMessages.size());
             for (int i = 0; i < count; i++) {
@@ -130,5 +143,18 @@ public class MainViewModel extends AndroidViewModel {
             isLoadingMoreState.postValue(false);
 
         }).start();
+    }
+    // 列表加载新备注
+    public void reloadRemarks() {
+        List<Message> currentList = messageList.getValue();
+        if (currentList == null) return;
+
+        // 重新查库填数据
+        fillRemarks(currentList);
+
+        messageList.setValue(currentList);
+
+        // 更新总仓库
+        fillRemarks(allMessages);
     }
 }
