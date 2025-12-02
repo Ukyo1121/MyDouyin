@@ -1,6 +1,8 @@
 package com.bytedance.mydouyin.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bytedance.mydouyin.databinding.ActivityMainBinding;
+import com.bytedance.mydouyin.model.Message;
 import com.bytedance.mydouyin.viewmodel.MainViewModel;
 
 import com.bytedance.mydouyin.R;
@@ -38,12 +41,17 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new com.bytedance.mydouyin.view.MessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(com.bytedance.mydouyin.model.Message message) {
-                // 创建 Intent跳转到 RemarkActivity
+                // 点击整行，跳转聊天界面
+                android.content.Intent intent = new android.content.Intent(MainActivity.this, com.bytedance.mydouyin.view.ChatActivity.class);
+                intent.putExtra("message_data", message);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAvatarClick(com.bytedance.mydouyin.model.Message message) {
+                // 点击头像，跳转备注页面
                 android.content.Intent intent = new android.content.Intent(MainActivity.this, com.bytedance.mydouyin.view.RemarkActivity.class);
-
                 intent.putExtra("nickname", message.getNickname());
-
-                // 启动跳转
                 startActivity(intent);
             }
         });
@@ -70,6 +78,17 @@ public class MainActivity extends AppCompatActivity {
                     binding.pbLoadMore.setVisibility(android.view.View.VISIBLE);
                 } else {
                     binding.pbLoadMore.setVisibility(android.view.View.GONE);
+                }
+            }
+        });
+
+        // 监听滚动信号
+        viewModel.scrollToTopSignal.observe(this, new androidx.lifecycle.Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean shouldScroll) {
+                if (shouldScroll) {
+                    // 收到信号，列表自动平滑滚动顶部
+                    binding.rvMessageList.smoothScrollToPosition(0);
                 }
             }
         });

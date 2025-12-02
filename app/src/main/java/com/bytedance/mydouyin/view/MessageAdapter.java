@@ -26,7 +26,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
     // 定义一个接口用于把点击事件传递出去
     public interface OnItemClickListener {
+        // 点击整行（跳转聊天页面）
         void onItemClick(Message message);
+
+        // 点击头像（跳转备注页面）
+        void onAvatarClick(Message message);
     }
 
     // 暴露一个方法让外面设置监听器
@@ -50,12 +54,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     // 绑定 ViewHolder：把数据填入视图
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        // 获取当前这一行的消息数据
         Message message = messageList.get(position);
 
-        // 调用 ViewHolder 里的方法进行显示
         holder.bind(message);
-        // 给整个 Item 设置点击事件
+
+        // 设置整行点击事件 (跳转聊天页面)
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,8 +67,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
             }
         });
-    }
 
+        // 设置头像点击事件 (跳转备注页面)
+        holder.ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onAvatarClick(message);
+                }
+            }
+        });
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return messageList.get(position).getType();
+    }
     // 告诉列表一共有多少条数据
     @Override
     public int getItemCount() {
@@ -75,10 +91,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     // Inner Class: ViewHolder
     static class MessageViewHolder extends RecyclerView.ViewHolder {
         private final ItemMessageBinding binding;
+        public android.widget.ImageView ivAvatar;
 
         public MessageViewHolder(@NonNull ItemMessageBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            this.ivAvatar = binding.ivAvatar;
         }
 
         public void bind(Message message) {
