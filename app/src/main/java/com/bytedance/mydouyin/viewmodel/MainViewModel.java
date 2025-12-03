@@ -260,18 +260,22 @@ public class MainViewModel extends AndroidViewModel {
                     }
                 }
 
-                // 消息置顶
-                // 操作消息总仓库
+                int targetIndex = -1;
+                int oldUnreadCount = 0; // 默认旧未读数是 0
+
                 if (allMessages != null) {
-                    int targetIndex = -1;
                     for (int i = 0; i < allMessages.size(); i++) {
                         if (allMessages.get(i).getNickname().equals(senderName)) {
                             targetIndex = i;
+                            // 提取消息旧未读数
+                            oldUnreadCount = allMessages.get(i).getUnreadCount();
                             break;
                         }
                     }
-                    // 如果有历史对话框，先删掉旧的
+
+                    // 删除旧消息
                     if (targetIndex != -1) {
+                        // 保留备注
                         String savedRemark = allMessages.get(targetIndex).getLocalRemark();
                         newMsg.setLocalRemark(savedRemark);
 
@@ -281,7 +285,14 @@ public class MainViewModel extends AndroidViewModel {
                             newMsg.setLocalRemark(dbHelper.getRemark(senderName));
                         }
                     }
-                    // 把新的消息插到第一条
+
+                    // 新未读数 = 旧未读数 + 1
+                    newMsg.setUnreadCount(oldUnreadCount + 1);
+
+                    // 把这条新消息存入全局仓库
+                    com.bytedance.mydouyin.model.ChatDataHelper.addMessage(senderName, newMsg);
+
+                    // 把新消息置顶
                     allMessages.add(0, newMsg);
                 }
 
@@ -308,5 +319,28 @@ public class MainViewModel extends AndroidViewModel {
                 scrollToTopSignal.postValue(true);
             }
         }).start();
+    }
+    public void clearUnread(String nickname) {
+        // 修改总仓库
+        if (allMessages != null) {
+            for (Message msg : allMessages) {
+                if (msg.getNickname().equals(nickname)) {
+                    msg.setUnreadCount(0); // 清零
+                    break;
+                }
+            }
+        }
+
+        // 修改当前显示的列表并刷新 UI
+        List<Message> currentList = messageList.getValue();
+        if (currentList != null) {
+            for (Message msg : currentList) {
+                if (msg.getNickname().equals(nickname)) {
+                    msg.setUnreadCount(0); // 清零
+                    break;
+                }
+            }
+            messageList.setValue(currentList);
+        }
     }
 }

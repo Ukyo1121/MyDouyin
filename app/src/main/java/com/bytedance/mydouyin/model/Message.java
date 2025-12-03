@@ -14,6 +14,7 @@ public class Message implements Serializable{
     private int avatarResId;
     private int unreadCount;
     private String localRemark;
+    private boolean isSystem;
 
     // 聊天/卡片专用字段
     private int msgImageResId; // 图片消息的大图 / 卡片的封面图
@@ -80,4 +81,11 @@ public class Message implements Serializable{
 
     public boolean isSelf() { return isSelf; }
     public void setSelf(boolean self) { isSelf = self; }
+    public void setSystem(boolean system) {
+        isSystem = system;
+    }
+
+    public boolean isSystem() {
+        return isSystem;
+    }
 }

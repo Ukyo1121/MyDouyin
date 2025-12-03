@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(com.bytedance.mydouyin.model.Message message) {
                 // 点击整行，跳转聊天界面
+                viewModel.clearUnread(message.getNickname());// 清空消息未读数
                 android.content.Intent intent = new android.content.Intent(MainActivity.this, com.bytedance.mydouyin.view.ChatActivity.class);
                 intent.putExtra("message_data", message);
                 startActivity(intent);

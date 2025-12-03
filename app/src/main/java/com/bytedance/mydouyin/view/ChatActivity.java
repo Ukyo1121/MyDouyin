@@ -21,34 +21,32 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 接收传过来的消息对象
         Message targetMsg = (Message) getIntent().getSerializableExtra("message_data");
         if (targetMsg == null) return;
 
-        // 标题栏昵称
-        binding.tvTitle.setText(targetMsg.getLocalRemark() != null ? targetMsg.getLocalRemark() : targetMsg.getNickname());
-
+        String nickname = targetMsg.getLocalRemark() != null ? targetMsg.getLocalRemark() : targetMsg.getNickname();
+        binding.tvTitle.setText(nickname);
         binding.btnBack.setOnClickListener(v -> finish());
 
+        // 获取历史记录
+        boolean isSystem = targetMsg.isSystem();
+        chatHistory = com.bytedance.mydouyin.model.ChatDataHelper.getChatHistory(
+                targetMsg.getNickname(),
+                isSystem,
+                targetMsg
+        );
+
+        // 初始化 Adapter
         chatAdapter = new ChatAdapter(chatHistory);
-        binding.rvChatList.setLayoutManager(new LinearLayoutManager(this));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(false);
+        binding.rvChatList.setLayoutManager(layoutManager);
         binding.rvChatList.setAdapter(chatAdapter);
 
-        // 生成一些历史记录 + 把刚才点的由于最新消息放进去
-        loadFakeHistory(targetMsg);
-    }
-
-    private void loadFakeHistory(Message currentMsg) {
-        // 造几条文本历史
-        Message h1 = new Message();
-        h1.setType(Message.TYPE_TEXT);
-        h1.setContent("你好呀！");
-        h1.setAvatarResId(currentMsg.getAvatarResId());
-        chatHistory.add(h1);
-
-        // 把列表页显示的那条最新消息加进去
-        chatHistory.add(currentMsg);
-
-        chatAdapter.notifyDataSetChanged();
+        // 手动滚动到消息底部
+        if (chatAdapter.getItemCount() > 0) {
+            binding.rvChatList.scrollToPosition(chatAdapter.getItemCount() - 1);
+        }
     }
 }

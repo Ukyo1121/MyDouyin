@@ -24,22 +24,34 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         return list != null ? list.size() : 0;
     }
+    // 根据 消息类型 + 是否是自己，返回对应的 XML 布局 ID
     @Override
     public int getItemViewType(int position) {
-        // 这里简化：假设全是左边 (对方发的)
-        // 实际开发要判断 isSelf
-        return list.get(position).getType();
+        Message msg = list.get(position);
+        boolean isSelf = msg.isSelf();
+
+        if (msg.getType() == Message.TYPE_CARD) {
+            return isSelf ? R.layout.item_chat_right_card : R.layout.item_chat_left_card;
+        } else if (msg.getType() == Message.TYPE_IMAGE) {
+            return isSelf ? R.layout.item_chat_right_image : R.layout.item_chat_left_image;
+        } else {
+            // 默认文本
+            return isSelf ? R.layout.item_chat_right_text : R.layout.item_chat_left_text;
+        }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == Message.TYPE_CARD) {
-            return new CardHolder(inflater.inflate(R.layout.item_chat_left_card, parent, false));
-        } else if (viewType == Message.TYPE_IMAGE) {
-            return new ImageHolder(inflater.inflate(R.layout.item_chat_left_image, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+
+        // 根据布局 ID 判断该用哪个 Holder
+        if (viewType == R.layout.item_chat_left_card || viewType == R.layout.item_chat_right_card) {
+            return new CardHolder(view);
+        } else if (viewType == R.layout.item_chat_left_image || viewType == R.layout.item_chat_right_image) {
+            return new ImageHolder(view);
         } else {
-            return new TextHolder(inflater.inflate(R.layout.item_chat_left_text, parent, false));
+            return new TextHolder(view);
         }
     }
 
