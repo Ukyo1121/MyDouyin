@@ -7,14 +7,59 @@
     android:background="#161823"
     tools:context=".view.MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="35dp"
+        android:background="#161823"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_search_input"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_menu_search"
+                app:tint="#888888"/>
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="搜索"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#888888"
+                android:textSize="14sp"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/pb_load_more"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/layout_search">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_message_list"
@@ -24,15 +69,61 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/pb_load_more"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="8dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="40dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:cardBackgroundColor="#333333"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/iv_notify_avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/sym_def_app_icon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_notify_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="新消息：张三"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_notify_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="今晚去吃火锅吗？"
+                    android:textColor="#CCCCCC"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

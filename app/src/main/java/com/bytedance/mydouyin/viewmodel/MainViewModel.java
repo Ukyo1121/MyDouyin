@@ -34,19 +34,24 @@ public class MainViewModel extends AndroidViewModel {
     // 存放从 JSON 读出来的所有数据（模拟服务器数据库）
     private List<Message> allMessages = new ArrayList<>();
     private RemarkDatabaseHelper dbHelper;
+    // 记录当前的搜索关键词，默认为空
+    private String currentKeyword = "";
+    // 信息列表是否到底
+    public MutableLiveData<Boolean> isNoMoreData = new MutableLiveData<>(false);
+    // 用于弹出顶部通知
+    public MutableLiveData<Message> newNotification = new MutableLiveData<>();
     // 随机数工具
     private java.util.Random random = new java.util.Random();
 
     // 模拟的好友名单
     private String[] mockSenders = {
-            "张三", "李四", "王五", "妈妈", "产品经理-强哥", "房东阿姨", "前任", "外卖小哥"
+            "张三", "李四", "王五", "妈妈", "产品经理-强哥", "房东阿姨", "姐姐", "外卖小哥"
     };
 
     // 模拟的聊天内容库
     private String[] mockContents = {
             "在吗？借我点钱急用",
             "哈哈哈哈哈哈笑死我了",
-            "[动画表情]",
             "今晚出来喝酒吗？",
             "文件发你了，记得收一下",
             "恭喜恭喜！",
@@ -83,6 +88,9 @@ public class MainViewModel extends AndroidViewModel {
                 for (Message msg : list) {
                     // 手动给每条消息设置一个默认头像
                     msg.setAvatarResId(android.R.drawable.sym_def_app_icon);
+                    if (msg.isSystem()) {
+                        msg.setType(Message.TYPE_SYSTEM_TEXT_CARD);
+                    }
                 }
             }
             return list != null ? list : new ArrayList<>();
@@ -92,14 +100,66 @@ public class MainViewModel extends AndroidViewModel {
             return new ArrayList<>();
         }
     }
-    // 把数据库里的备注同步到内存列表里
+    // 删除信息
+    public void deleteMessage(Message message) {
+        if (allMessages != null) {
+            allMessages.remove(message);
+
+            List<Message> result = filterList(allMessages, currentKeyword);
+            messageList.setValue(result);
+        }
+    }
+    // 对列表进行排序：置顶的在前，其他按时间排序
+    private void sortMessages(List<Message> list) {
+        if (list == null) return;
+        java.util.Collections.sort(list, new java.util.Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                if (o1.isPinned() && !o2.isPinned()) return -1;
+                if (!o1.isPinned() && o2.isPinned()) return 1;
+                return 0;
+            }
+        });
+    }
+    // 置顶功能
+    public void toggleMessagePin(Message message) {
+        boolean newStatus = !message.isPinned();
+        message.setPinned(newStatus);
+
+        // 写入数据库
+        if (dbHelper != null) {
+            dbHelper.updatePinStatus(message.getNickname(), newStatus);
+        }
+
+        // 重新排序并刷新
+        if (allMessages != null) {
+            sortMessages(allMessages);
+
+            // 刷新 UI
+            List<Message> result = filterList(allMessages, currentKeyword);
+            messageList.setValue(result);
+        }
+    }
+    // 把数据库里的备注和置顶状态同步到内存列表里
     private void fillRemarks(List<Message> list) {
         if (list == null) return;
-        for (Message msg : list) {
-            // 用昵称去数据库查备注
-            String remark = dbHelper.getRemark(msg.getNickname());
-            // 填入对象
-            msg.setLocalRemark(remark);
+
+        try {
+            for (Message msg : list) {
+                if (dbHelper != null) {
+                    // 读取备注
+                    String remark = dbHelper.getRemark(msg.getNickname());
+                    msg.setLocalRemark(remark);
+                    // 读取置顶状态
+                    boolean pinned = dbHelper.isPinned(msg.getNickname());
+                    msg.setPinned(pinned);
+                }
+            }
+            sortMessages(list);
+        } catch (Exception e) {
+            // 如果发生了并发修改异常，说明刚才正好有新消息进来。
+            // 直接忽略这次错误，界面马上会收到新消息的通知再次刷新。
+            e.printStackTrace();
         }
     }
     // 加载数据的方法
@@ -107,6 +167,12 @@ public class MainViewModel extends AndroidViewModel {
         // 拉取最新全量数据
         allMessages = readJsonFromAssets();
         fillRemarks(allMessages);
+        // 把 JSON 里读到的所有头像，预存到 ChatDataHelper 的缓存里
+        if (allMessages != null) {
+            for (Message msg : allMessages) {
+                com.bytedance.mydouyin.model.ChatDataHelper.saveAvatarInfo(msg);
+            }
+        }
         // 截取前 20 条展示
         List<Message> firstPage = new ArrayList<>();
         int count = Math.min(20, allMessages.size());
@@ -122,57 +188,82 @@ public class MainViewModel extends AndroidViewModel {
 
     // 模拟下拉更新数据
     public void refreshData() {
+        isNoMoreData.postValue(false);
         new Thread(() -> {
-            try { Thread.sleep(1000); } catch (InterruptedException e) {}
-
-            // 重新读取数据
-            allMessages = readJsonFromAssets();
-            fillRemarks(allMessages);
-            List<Message> firstPage = new ArrayList<>();
-            int count = Math.min(20, allMessages.size());
-            for (int i = 0; i < count; i++) {
-                firstPage.add(allMessages.get(i));
+            try {
+                Thread.sleep(500); // 模拟网络延迟
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
+            // 遍历所有消息，将未读数清零
+            if (allMessages != null) {
+                for (Message msg : allMessages) {
+                    msg.setUnreadCount(0); // 强制设为 0
+                }
+            }
+
+            // 截取第一页数据 (前20条)
+            List<Message> firstPage = new ArrayList<>();
+            int count = Math.min(20, allMessages != null ? allMessages.size() : 0);
+
+            if (allMessages != null) {
+                for (int i = 0; i < count; i++) {
+                    firstPage.add(allMessages.get(i));
+                }
+            }
+
+            // 更新 UI
             messageList.postValue(firstPage);
+
         }).start();
     }
     // 模拟上滑加载更多数据
     public void loadMoreData() {
         if (isLoading) return;
 
-        // 如果当前显示的条数已经等于总条数，说明没数据了，直接返回
         List<Message> currentDisplayList = messageList.getValue();
-        if (currentDisplayList == null || currentDisplayList.size() >= allMessages.size()) {
+
+        // 如果当前已经显示了所有数据，直接显示“没有更多”，不再请求
+        if (currentDisplayList != null && allMessages != null && currentDisplayList.size() >= allMessages.size()) {
+            isNoMoreData.setValue(true);
             return;
         }
 
         isLoading = true;
-        isLoadingMoreState.setValue(true);
+        isLoadingMoreState.setValue(true); // 显示加载圈
+        isNoMoreData.setValue(false);
 
         new Thread(() -> {
             try {
-                Thread.sleep(1000); // 模拟网络延迟
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            int currentCount = currentDisplayList.size();
+            int currentCount = currentDisplayList != null ? currentDisplayList.size() : 0;
+            // 判空保护
+            if (allMessages == null) allMessages = new ArrayList<>();
 
             int nextCount = Math.min(currentCount + 10, allMessages.size());
 
-            // 准备一个新的列表，先装入旧数据
-            List<Message> newList = new ArrayList<>(currentDisplayList);
+            List<Message> newList = new ArrayList<>();
+            if (currentDisplayList != null) newList.addAll(currentDisplayList);
 
-            // 从仓库里追加新数据
-            List<Message> nextChunk = allMessages.subList(currentCount, nextCount);
-            newList.addAll(nextChunk);
+            if (currentCount < allMessages.size()) {
+                List<Message> nextChunk = allMessages.subList(currentCount, nextCount);
+                newList.addAll(nextChunk);
+            }
 
-            // 更新界面
+            // 更新列表
             messageList.postValue(newList);
 
             isLoading = false;
             isLoadingMoreState.postValue(false);
+
+            if (newList.size() >= allMessages.size()) {
+                isNoMoreData.postValue(true);
+            }
 
         }).start();
     }
@@ -190,13 +281,11 @@ public class MainViewModel extends AndroidViewModel {
         fillRemarks(allMessages);
     }
     // 启动消息模拟中心
-    // 启动更逼真的消息模拟中心
     public void startMessageSimulation() {
         new Thread(() -> {
             while (isSimulating) {
                 try {
-                    // 为了演示效果，我们设快一点，3秒来一条
-                    Thread.sleep(3000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -206,7 +295,7 @@ public class MainViewModel extends AndroidViewModel {
                 // 构建信息
                 Message newMsg = new Message();
                 newMsg.setNickname(senderName);
-                newMsg.setTime("刚刚");
+                newMsg.setTime(com.bytedance.mydouyin.utils.TimeUtils.getFriendlyTimeSpanByNow(System.currentTimeMillis()));
                 newMsg.setUnreadCount(1);
                 newMsg.setAvatarResId(android.R.drawable.sym_def_app_icon);
                 newMsg.setSelf(false); // 模拟的是别人发给我的信息
@@ -238,8 +327,22 @@ public class MainViewModel extends AndroidViewModel {
                     // Type 2: 图片消息
                     newMsg.setType(Message.TYPE_IMAGE);
                     newMsg.setContent("[图片]");
-                    // 实际图片资源 (暂时用系统图标代替)
-                    newMsg.setMsgImageResId(android.R.drawable.ic_menu_gallery);
+
+                    int[] localImages = {
+                            com.bytedance.mydouyin.R.drawable.pic_1,
+                            com.bytedance.mydouyin.R.drawable.pic_2,
+                            com.bytedance.mydouyin.R.drawable.pic_3,
+                            com.bytedance.mydouyin.R.drawable.pic_4,
+                            com.bytedance.mydouyin.R.drawable.pic_5,
+                            com.bytedance.mydouyin.R.drawable.pic_6,
+                            com.bytedance.mydouyin.R.drawable.pic_7
+                    };
+
+                    // 随机抽取一个下标
+                    int index = random.nextInt(localImages.length);
+
+                    // 设置给消息对象
+                    newMsg.setMsgImageResId(localImages[index]);
                 }
                 else {
                     // Type 3: 运营卡片消息
@@ -250,73 +353,67 @@ public class MainViewModel extends AndroidViewModel {
                         newMsg.setContent("分享地点：瑞幸咖啡（武汉大学信息学部店）"); // 列表摘要
                         newMsg.setCardTitle("瑞幸咖啡（武汉大学信息学部店）");
                         newMsg.setCardSubtitle("咖啡厅 · 附近");
-                        newMsg.setMsgImageResId(android.R.drawable.star_big_on); // 卡片封面
+                        newMsg.setMsgImageResId(R.drawable.coffee); // 卡片封面
                     } else {
-                        // 例子B: 豆乳黑麒麟
-                        newMsg.setContent("分享商品：豆乳黑麒麟（中杯）"); // 列表摘要
-                        newMsg.setCardTitle("豆乳黑麒麟 (中杯)");
-                        newMsg.setCardSubtitle("¥10.5");
-                        newMsg.setMsgImageResId(android.R.drawable.star_big_off);// 卡片封面
+                        newMsg.setContent("分享商品：伯牙绝弦"); // 列表摘要
+                        newMsg.setCardTitle("伯牙绝弦 (大杯)");
+                        newMsg.setCardSubtitle("¥18");
+                        newMsg.setMsgImageResId(R.drawable.chaji);// 卡片封面
                     }
                 }
 
+                // 更新总仓库
                 int targetIndex = -1;
-                int oldUnreadCount = 0; // 默认旧未读数是 0
+                int oldUnreadCount = 0;
 
                 if (allMessages != null) {
+                    // 查找旧消息
                     for (int i = 0; i < allMessages.size(); i++) {
                         if (allMessages.get(i).getNickname().equals(senderName)) {
                             targetIndex = i;
-                            // 提取消息旧未读数
                             oldUnreadCount = allMessages.get(i).getUnreadCount();
                             break;
                         }
                     }
 
-                    // 删除旧消息
                     if (targetIndex != -1) {
-                        // 保留备注
-                        String savedRemark = allMessages.get(targetIndex).getLocalRemark();
-                        newMsg.setLocalRemark(savedRemark);
+                        // 找到旧消息：继承 备注 和 置顶状态
+                        Message oldMsg = allMessages.get(targetIndex);
+                        newMsg.setLocalRemark(oldMsg.getLocalRemark());
+
+                        newMsg.setPinned(oldMsg.isPinned());
 
                         allMessages.remove(targetIndex);
                     } else {
                         if (dbHelper != null) {
                             newMsg.setLocalRemark(dbHelper.getRemark(senderName));
+                            newMsg.setPinned(dbHelper.isPinned(senderName));
                         }
                     }
 
-                    // 新未读数 = 旧未读数 + 1
+                    // 累加未读数
                     newMsg.setUnreadCount(oldUnreadCount + 1);
-
-                    // 把这条新消息存入全局仓库
                     com.bytedance.mydouyin.model.ChatDataHelper.addMessage(senderName, newMsg);
 
-                    // 把新消息置顶
+                    // 插入到第一位
                     allMessages.add(0, newMsg);
+
+                    // 插入后立即排序
+                    sortMessages(allMessages);
                 }
 
-                // 操作显示列表
-                List<Message> currentList = messageList.getValue();
-                if (currentList == null) currentList = new ArrayList<>();
-                List<Message> newList = new ArrayList<>(currentList);
+                // 使用 filterList 方法，根据当前是否在搜索 (currentKeyword) 自动返回正确的数据
+                // 如果 currentKeyword 是空，它会返回全部；如果有值，它会按规则过滤
+                List<Message> resultList = filterList(allMessages, currentKeyword);
 
-                int uiTargetIndex = -1;
-                for (int i = 0; i < newList.size(); i++) {
-                    if (newList.get(i).getNickname().equals(senderName)) {
-                        uiTargetIndex = i;
-                        break;
-                    }
-                }
-                if (uiTargetIndex != -1) {
-                    // 旧消息在屏幕可见范围内需要删除
-                    newList.remove(uiTargetIndex);
-                }
-                // 新消息置顶
-                newList.add(0, newMsg);
+                // 更新界面
+                messageList.postValue(resultList);
 
-                messageList.postValue(newList);
-                scrollToTopSignal.postValue(true);
+                // 触发顶部弹窗通知
+                // 只有当不在搜索状态时才弹，避免打扰
+                if (currentKeyword == null || currentKeyword.isEmpty()) {
+                    newNotification.postValue(newMsg);
+                }
             }
         }).start();
     }
@@ -342,5 +439,82 @@ public class MainViewModel extends AndroidViewModel {
             }
             messageList.setValue(currentList);
         }
+    }
+    // 搜索消息
+    public void searchMessages(String keyword) {
+        this.currentKeyword = keyword;
+
+        List<Message> snapshot = new ArrayList<>();
+        if (allMessages != null) {
+            snapshot.addAll(allMessages);
+        }
+
+        // 调用通用过滤方法
+        List<Message> result = filterList(snapshot, keyword);
+
+        // 更新界面
+        messageList.setValue(result);
+    }
+    // 通用过滤方法
+    // 通用的过滤方法 (支持高亮历史记录)
+    private List<Message> filterList(List<Message> sourceList, String keyword) {
+        List<Message> result = new ArrayList<>();
+        if (sourceList == null) return result;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>(sourceList);
+        }
+
+        String key = keyword.toLowerCase();
+
+        try {
+            for (Message msg : sourceList) {
+                // 检查首页显示的字段 (昵称、备注、摘要、卡片标题)
+                boolean matchMain = false;
+
+                if (msg.getNickname() != null && msg.getNickname().toLowerCase().contains(key)) matchMain = true;
+                else if (msg.getLocalRemark() != null && msg.getLocalRemark().toLowerCase().contains(key)) matchMain = true;
+                else if (msg.getContent() != null && msg.getContent().toLowerCase().contains(key)) matchMain = true;
+                else if (msg.getCardTitle() != null && msg.getCardTitle().toLowerCase().contains(key)) matchMain = true;
+
+                if (matchMain) {
+                    // 如果主要信息匹配，直接显示原对象
+                    result.add(msg);
+                }
+                else {
+                    // 2. 如果主要信息不匹配，去查历史记录对象
+                    Message historyMsg = com.bytedance.mydouyin.model.ChatDataHelper.getMatchedMessage(msg, key);
+
+                    if (historyMsg != null) {
+                        // 找到了历史匹配！创建替身用于展示
+                        Message tempMsg = new Message();
+
+                        // A. 身份信息：复制当前联系人的 (保持头像、昵称是这个人的)
+                        tempMsg.setNickname(msg.getNickname());
+                        tempMsg.setLocalRemark(msg.getLocalRemark());
+                        tempMsg.setUnreadCount(msg.getUnreadCount());
+                        tempMsg.setSystem(msg.isSystem());
+
+                        // 复制头像
+                        tempMsg.setAvatarResId(msg.getAvatarResId());
+                        tempMsg.setAvatarUrl(msg.getAvatarUrl());
+                        tempMsg.setAvatarName(msg.getAvatarName());
+
+                        // B. 展示内容：复制历史记录的真实数据！
+                        tempMsg.setContent(historyMsg.getContent()); // 显示搜到的那句话
+
+                        // 【核心修改】使用历史记录的真实时间！
+                        tempMsg.setTime(historyMsg.getTime());
+
+                        tempMsg.setType(Message.TYPE_TEXT);
+
+                        result.add(tempMsg);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

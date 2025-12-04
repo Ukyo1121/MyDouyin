@@ -1,42 +1,234 @@
 [
-  {"nickname": "抖音小助手", "content": "欢迎来到抖音，记录美好生活！", "time": "刚刚", "unreadCount": 0, "isSystem": true},
-  {"nickname": "张三", "content": "今晚火锅局，老地方见！", "time": "12:30", "unreadCount": 0, "isSystem": false},
-  {"nickname": "李四", "content": "[分享视频] 哈哈哈哈，这个猫太逗了", "time": "11:45", "unreadCount": 0, "isSystem": false},
-  {"nickname": "王五", "content": "收到，明天把文件发你", "time": "11:00", "unreadCount": 0, "isSystem": false},
-  {"nickname": "系统通知", "content": "您的账号安全等级已提升，点击查看详情", "time": "10:30", "unreadCount": 0, "isSystem": true},
-  {"nickname": "赵六", "content": "上次那家咖啡店叫什么名字来着？", "time": "10:15", "unreadCount": 0, "isSystem": false},
-  {"nickname": "钱七", "content": "[图片] 帮忙选一下哪个颜色好看", "time": "10:00", "unreadCount": 0, "isSystem": false},
-  {"nickname": "活动君", "content": "双11预售开启！抢百亿补贴", "time": "09:50", "unreadCount": 0, "isSystem": true},
-  {"nickname": "妈妈", "content": "最近降温了，记得穿秋裤", "time": "08:30", "unreadCount": 0, "isSystem": false},
-  {"nickname": "老同学", "content": "好久不见！听说你回老家了？", "time": "08:00", "unreadCount": 0, "isSystem": false},
-  {"nickname": "顺丰速运", "content": "您的快递已放入丰巢柜，请及时取出", "time": "昨天", "unreadCount": 0, "isSystem": true},
-  {"nickname": "HR-Jessica", "content": "面试结果会在三个工作日内反馈", "time": "昨天", "unreadCount": 0, "isSystem": false},
-  {"nickname": "游戏推广", "content": "新服开启，上线送VIP888！", "time": "昨天", "unreadCount": 0, "isSystem": true},
-  {"nickname": "产品经理-强哥", "content": "这个需求UI还在改，稍微等一下", "time": "昨天", "unreadCount": 0, "isSystem": false},
-  {"nickname": "技术总监", "content": "线上有个崩溃需要紧急修复", "time": "昨天", "unreadCount": 0, "isSystem": false},
-  {"nickname": "相亲群", "content": "王阿姨：这是小刘的照片，你们看看", "time": "昨天", "unreadCount": 0, "isSystem": false},
-  {"nickname": "安全中心", "content": "检测到您的账号在异地登录", "time": "10-28", "unreadCount": 0, "isSystem": true},
-  {"nickname": "代购-小美", "content": "亲，你要的口红到货了，还要吗？", "time": "10-28", "unreadCount": 0, "isSystem": false},
-  {"nickname": "房东阿姨", "content": "下个季度房租记得转我支付宝", "time": "10-27", "unreadCount": 0, "isSystem": false},
-  {"nickname": "健身教练", "content": "今天怎么没来练腿？", "time": "10-27", "unreadCount": 0, "isSystem": false},
-  {"nickname": "罗永浩", "content": "今晚8点直播间，交个朋友！", "time": "10-26", "unreadCount": 0, "isSystem": false},
-  {"nickname": "英语流利说", "content": "坚持打卡30天，你也可以开口说英语", "time": "10-25", "unreadCount": 0, "isSystem": true},
-  {"nickname": "前任", "content": "在吗？有个东西落你那了", "time": "10-24", "unreadCount": 0, "isSystem": false},
-  {"nickname": "字节跳动招聘", "content": "同学你好，你的简历已通过初筛", "time": "10-23", "unreadCount": 0, "isSystem": true},
-  {"nickname": "小学班长", "content": "我们要组织同学聚会，你来吗？", "time": "10-22", "unreadCount": 0, "isSystem": false},
-  {"nickname": "外卖小哥", "content": "您的外卖放前台了，祝您用餐愉快", "time": "10-21", "unreadCount": 0, "isSystem": false},
-  {"nickname": "优衣库", "content": "秋冬新款上市，限时特惠", "time": "10-20", "unreadCount": 0, "isSystem": true},
-  {"nickname": "驾校李教练", "content": "明天早上8点练车，别迟到", "time": "10-19", "unreadCount": 0, "isSystem": false},
-  {"nickname": "装修-王工", "content": "水电改造的图纸发您确认一下", "time": "10-18", "unreadCount": 0, "isSystem": false},
-  {"nickname": "宠物医院", "content": "豆豆的疫苗该打了", "time": "10-17", "unreadCount": 0, "isSystem": false},
-  {"nickname": "招商银行", "content": "您本月信用卡账单金额为 5678.90 元", "time": "10-16", "unreadCount": 0, "isSystem": true},
-  {"nickname": "猎头-David", "content": "有个阿里P7的机会考虑吗？", "time": "10-15", "unreadCount": 0, "isSystem": false},
-  {"nickname": "社区团购", "content": "今天的阳光玫瑰葡萄很新鲜，要不要来一箱", "time": "10-14", "unreadCount": 0, "isSystem": false},
-  {"nickname": "极客时间", "content": "您订阅的课程更新了第15讲", "time": "10-13", "unreadCount": 0, "isSystem": true},
-  {"nickname": "陈总", "content": "刚才会上说的那个方案，你再整理一下", "time": "10-12", "unreadCount": 0, "isSystem": false},
-  {"nickname": "移动客服", "content": "您的流量剩余不足200MB", "time": "10-11", "unreadCount": 0, "isSystem": true},
-  {"nickname": "tony老师", "content": "这周有空过来剪头发吗？", "time": "10-10", "unreadCount": 0, "isSystem": false},
-  {"nickname": "物业管家", "content": "明天小区停水通知", "time": "10-09", "unreadCount": 0, "isSystem": true},
-  {"nickname": "租房中介", "content": "那套房子被别人定走了，再看看别的吧", "time": "10-08", "unreadCount": 0, "isSystem": false},
-  {"nickname": "表弟", "content": "哥，借我200块钱急用", "time": "10-07", "unreadCount": 0, "isSystem": false}
+{
+"nickname": "抖音小助手",
+"content": "欢迎来到抖音，记录美好生活！",
+"time": "刚刚",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%8A%96%E9%9F%B3.jpg"
+},
+{
+"nickname": "张三",
+"content": "今晚火锅局，老地方见！",
+"time": "12:30",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%BC%A0%E4%B8%89.jpg"
+},
+{
+"nickname": "李四",
+"content": "哈哈哈哈，这个猫太逗了",
+"time": "11:45",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%9D%8E%E5%9B%9B.jpg"
+},
+{
+"nickname": "王五",
+"content": "收到，明天把文件发你",
+"time": "11:00",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E7%8E%8B%E4%BA%94.jpg"
+},
+{
+"nickname": "赵六",
+"content": "上次那家咖啡店叫什么名字来着？",
+"time": "10:15",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E8%B5%B5%E5%85%AD.jpg"
+},
+{
+"nickname": "活动君",
+"content": "双11预售开启！抢百亿补贴",
+"time": "09:50",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%B4%BB%E5%8A%A8%E5%90%9B.jpg"
+},
+{
+"nickname": "妈妈",
+"content": "最近降温了，记得穿秋裤",
+"time": "08:30",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%A6%88%E5%A6%88.jpg"
+},
+{
+"nickname": "老同学",
+"content": "好久不见！听说你回老家了？",
+"time": "08:00",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E8%80%81%E5%90%8C%E5%AD%A6.jpg"
+},
+{
+"nickname": "顺丰速运",
+"content": "您的快递已放入丰巢柜，请及时取出",
+"time": "昨天",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E9%A1%BA%E4%B8%B0.jpg"
+},
+{
+"nickname": "HR-Jessica",
+"content": "面试结果会在三个工作日内反馈",
+"time": "昨天",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/HR.jpg"
+},
+{
+"nickname": "游戏推广",
+"content": "新服开启，上线送VIP888！",
+"time": "昨天",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%B8%B8%E6%88%8F%E6%8E%A8%E5%B9%BF.jpg"
+},
+{
+"nickname": "产品经理-强哥",
+"content": "这个需求UI还在改，稍微等一下",
+"time": "昨天",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86.jpg"
+},
+{
+"nickname": "技术总监",
+"content": "线上有个崩溃需要紧急修复",
+"time": "昨天",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%8A%80%E6%9C%AF%E6%80%BB%E7%9B%91.jpg"
+},
+{
+"nickname": "代购-小美",
+"content": "亲，你要的口红到货了，还要吗？",
+"time": "10-28",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E4%BB%A3%E8%B4%AD.jpg"
+},
+{
+"nickname": "房东阿姨",
+"content": "下个季度房租记得转我支付宝",
+"time": "10-27",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%88%BF%E4%B8%9C.jpg"
+},
+{
+"nickname": "健身教练",
+"content": "今天怎么没来练腿？",
+"time": "10-27",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%81%A5%E8%BA%AB%E6%95%99%E7%BB%83.jpg"
+},
+{
+"nickname": "姐姐",
+"content": "在吗？有个东西落你那了",
+"time": "10-24",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%A7%90%E5%A7%90.jpg"
+},
+{
+"nickname": "字节跳动招聘",
+"content": "同学你好，你的简历已通过初筛",
+"time": "10-23",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%AD%97%E8%8A%82%E6%8B%9B%E8%81%98.jpg"
+},
+{
+"nickname": "小学班长",
+"content": "我们要组织同学聚会，你来吗？",
+"time": "10-22",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%B0%8F%E5%AD%A6%E7%8F%AD%E9%95%BF.jpg"
+},
+{
+"nickname": "外卖小哥",
+"content": "您的外卖放前台了，祝您用餐愉快",
+"time": "10-21",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%A4%96%E5%8D%96.jpg"
+},
+{
+"nickname": "驾校李教练",
+"content": "明天早上8点练车，别迟到",
+"time": "10-19",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E9%A9%BE%E6%A0%A1%E6%95%99%E7%BB%83.jpg"
+},
+{
+"nickname": "招商银行",
+"content": "您本月信用卡账单金额为 5678.90 元",
+"time": "10-16",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E6%8B%9B%E5%95%86%E9%93%B6%E8%A1%8C.jpg"
+},
+{
+"nickname": "社区团购",
+"content": "今天的阳光玫瑰葡萄很新鲜，要不要来一箱",
+"time": "10-14",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E5%9B%A2%E8%B4%AD.jpg"
+},
+{
+"nickname": "陈总",
+"content": "刚才会上说的那个方案，你再整理一下",
+"time": "10-12",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E9%99%88%E6%80%BB.jpg"
+},
+{
+"nickname": "移动客服",
+"content": "您的流量剩余不足200MB",
+"time": "10-11",
+"unreadCount": 0,
+"isSystem": true,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E7%A7%BB%E5%8A%A8.jpg"
+},
+{
+"nickname": "tony老师",
+"content": "这周有空过来剪头发吗？",
+"time": "10-10",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/tony.jpg"
+},
+{
+"nickname": "小区物业",
+"content": "明天小区停水",
+"time": "10-09",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E7%89%A9%E4%B8%9A.jpg"
+},
+{
+"nickname": "租房中介",
+"content": "那套房子被别人定走了，再看看别的吧",
+"time": "10-08",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E4%B8%AD%E4%BB%8B.jpg"
+},
+{
+"nickname": "表弟",
+"content": "姐，借我200块钱急用",
+"time": "10-07",
+"unreadCount": 0,
+"isSystem": false,
+"avatarUrl": "https://su-zhiling.oss-cn-hangzhou.aliyuncs.com/avatar/%E5%A4%B4%E5%83%8F/%E8%A1%A8%E5%BC%9F.jpg"
+}
 ]

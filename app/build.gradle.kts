@@ -54,4 +54,6 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
+    // Glide 图片加载库
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

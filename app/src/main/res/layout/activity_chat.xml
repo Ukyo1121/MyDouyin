@@ -1,131 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#161823">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_header"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#161823"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    android:background="#000000"
+    android:fitsSystemWindows="true">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_revert"
-            app:tint="#FFFFFF"
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/arrow_down_float"
+            app:tint="#666666" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_dismiss_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="抖音小助手"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/btn_back"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_more"
-            app:tint="#FFFFFF"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#33FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:text="下拉关闭页面"
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_input"
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#161823"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="match_parent"
+        android:background="#161823">
 
-        <ImageView
-            android:id="@+id/iv_voice"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@android:drawable/ic_btn_speak_now"
-            app:tint="#FFFFFF"
-            android:padding="8dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#161823"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                app:tint="#FFFFFF"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <EditText
-            android:id="@+id/et_input"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/editbox_background"
-            android:backgroundTint="#2D2F3C"
-            android:hint="发送消息..."
-            android:textColor="#FFFFFF"
-            android:textColorHint="#888888"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:textSize="14sp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintStart_toEndOf="@id/iv_voice"
-            app:layout_constraintEnd_toStartOf="@id/iv_emoji"
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="抖音小助手"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/btn_back"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@android:drawable/ic_menu_more"
+                app:tint="#FFFFFF"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#33FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#161823"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <ImageView
+                android:id="@+id/iv_voice"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@android:drawable/ic_btn_speak_now"
+                app:tint="#FFFFFF"
+                android:padding="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ImageView
-            android:id="@+id/iv_emoji"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@android:drawable/star_big_on"
-            app:tint="#FFFFFF"
-            android:padding="8dp"
-            app:layout_constraintEnd_toStartOf="@id/iv_add"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:background="@drawable/bg_search_input"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintStart_toEndOf="@id/iv_voice"
+                app:layout_constraintEnd_toStartOf="@id/btn_send_container"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_add"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@android:drawable/ic_input_add"
-            app:tint="#FFFFFF"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+                <EditText
+                    android:id="@+id/et_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#888888"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="4dp"
+                    android:gravity="center_vertical"
+                    android:textSize="15sp"
+                    android:maxLines="4"/>
+
+                <ImageView
+                    android:id="@+id/iv_emoji"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_emoji_face"
+                    app:tint="#FFFFFF"
+                    android:padding="6dp"
+                    android:layout_marginEnd="4dp"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/btn_send_container"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/ic_input_add"
+                    app:tint="#FFFFFF"
+                    android:padding="8dp"/>
+
+                <ImageView
+                    android:id="@+id/btn_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_send_solid"
+                    android:background="@drawable/bg_btn_send_red"
+                    android:padding="8dp"
+                    app:tint="#FFFFFF"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="10dp"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toBottomOf="@id/layout_header"
+            app:layout_constraintBottom_toTopOf="@id/layout_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_chat_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingBottom="10dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/layout_header"
-        app:layout_constraintBottom_toTopOf="@id/layout_input"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

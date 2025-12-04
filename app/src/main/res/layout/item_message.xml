@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     android:background="?attr/selectableItemBackground">
+
     <ImageView
         android:id="@+id/iv_avatar"
         android:layout_width="50dp"
@@ -14,25 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FF0000"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:textColor="#FFFFFF"
-        android:textSize="10sp"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/iv_avatar"
-        app:layout_constraintCircleAngle="45"
-        app:layout_constraintCircleRadius="25dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="371dp"
-        tools:layout_editor_absoluteY="65dp"
-        tools:text="1"
-        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tv_nickname"
@@ -48,6 +30,33 @@
         app:layout_constraintEnd_toStartOf="@id/tv_time" />
 
     <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="刚刚"
+        android:textColor="#AAAAAA"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname" />
+
+    <TextView
+        android:id="@+id/tv_badge"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_badge_circle"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toEndOf="@id/tv_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_time"
+        tools:text="1" />
+
+    <TextView
         android:id="@+id/tv_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -58,19 +67,9 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="@id/tv_nickname"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="刚刚"
-        android:textColor="#AAAAAA"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_nickname"
-        app:layout_constraintBottom_toBottomOf="@id/tv_nickname" />
+        app:layout_constraintEnd_toStartOf="@id/tv_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

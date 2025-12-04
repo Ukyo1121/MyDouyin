@@ -5,6 +5,7 @@ public class Message implements Serializable{
     public static final int TYPE_TEXT = 0;   // 纯文本
     public static final int TYPE_IMAGE = 1;  // 图片
     public static final int TYPE_CARD = 2;   // 运营卡片 (如商品、地点)
+    public static final int TYPE_SYSTEM_TEXT_CARD = 3; // 系统纯文本交互卡片
 
     // 基础字段
     private int type = TYPE_TEXT;
@@ -15,6 +16,9 @@ public class Message implements Serializable{
     private int unreadCount;
     private String localRemark;
     private boolean isSystem;
+    // 头像 URL
+    private String avatarUrl;
+    private String avatarName;
 
     // 聊天/卡片专用字段
     private int msgImageResId; // 图片消息的大图 / 卡片的封面图
@@ -23,6 +27,8 @@ public class Message implements Serializable{
 
     // 区分消息发送者 (true=我发的, false=对方发的)
     private boolean isSelf = false;
+    // 是否置顶
+    private boolean isPinned = false;
 
     // 构造函数
     public Message(int avatarResId, String nickname, String content, String time, int unreadCount, boolean isSystem) {
@@ -88,4 +94,21 @@ public class Message implements Serializable{
     public boolean isSystem() {
         return isSystem;
     }
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setAvatarName(String myAvatar) {
+        this.avatarName = myAvatar;
+    }
+
+    public String getAvatarName() {
+        return avatarName;
+    }
+    public boolean isPinned() { return isPinned; }
+    public void setPinned(boolean pinned) { isPinned = pinned; }
 }
