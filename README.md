@@ -128,6 +128,7 @@ com.bytedance.mydouyin
 
 -----
 
-**Author**: [苏芷菱]
+**Author**: 苏芷菱
 
 **Date**: 2025/12/05
+
