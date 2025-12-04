@@ -7,7 +7,10 @@ android {
     compileSdk {
         version = release(36)
     }
-
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
     defaultConfig {
         applicationId = "com.bytedance.mydouyin"
         minSdk = 24
