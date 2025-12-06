@@ -88,6 +88,41 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.rvMessageList.setAdapter(adapter);
+        // 监听页面状态变化 (Content / Loading / Error)
+        viewModel.pageState.observe(this, new androidx.lifecycle.Observer<Integer>() {
+            @Override
+            public void onChanged(Integer state) {
+                android.view.View layoutSkeleton = findViewById(R.id.layout_skeleton);
+                android.view.View layoutError = findViewById(R.id.layout_error);
+                android.view.View layoutContent = binding.srlRefresh;
+
+                if (state == com.bytedance.mydouyin.viewmodel.MainViewModel.STATE_LOADING) {
+                    // 加载中：显示骨架，隐藏其他
+                    layoutSkeleton.setVisibility(android.view.View.VISIBLE);
+                    layoutError.setVisibility(android.view.View.GONE);
+                    layoutContent.setVisibility(android.view.View.GONE);
+                }
+                else if (state == com.bytedance.mydouyin.viewmodel.MainViewModel.STATE_ERROR) {
+                    // 失败：显示错误页，隐藏其他
+                    layoutSkeleton.setVisibility(android.view.View.GONE);
+                    layoutError.setVisibility(android.view.View.VISIBLE);
+                    layoutContent.setVisibility(android.view.View.GONE);
+                }
+                else {
+                    // 成功：显示列表，隐藏其他
+                    layoutSkeleton.setVisibility(android.view.View.GONE);
+                    layoutError.setVisibility(android.view.View.GONE);
+                    layoutContent.setVisibility(android.view.View.VISIBLE);
+                }
+            }
+        });
+
+        // 重试按钮点击事件
+        android.widget.Button btnRetry = findViewById(R.id.btn_retry);
+        btnRetry.setOnClickListener(v -> {
+            // 点击重试，重新调用 loadData
+            viewModel.loadData();
+        });
         // 监听新消息通知，显示顶部 Widget
         viewModel.newNotification.observe(this, new androidx.lifecycle.Observer<com.bytedance.mydouyin.model.Message>() {
             @Override

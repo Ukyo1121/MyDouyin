@@ -42,6 +42,16 @@ public class MainViewModel extends AndroidViewModel {
     public MutableLiveData<Message> newNotification = new MutableLiveData<>();
     // 随机数工具
     private java.util.Random random = new java.util.Random();
+    // 页面状态常量
+    public static final int STATE_CONTENT = 0; // 显示内容
+    public static final int STATE_LOADING = 1; // 显示骨架屏
+    public static final int STATE_ERROR = 2;   // 显示错误页
+
+    // 页面状态通知
+    public MutableLiveData<Integer> pageState = new MutableLiveData<>(STATE_CONTENT);
+
+    // 模拟标志：是否是第一次加载 (用于演示失败)
+    private boolean isFirstLoad = true;
 
     // 模拟的好友名单
     private String[] mockSenders = {
@@ -140,50 +150,94 @@ public class MainViewModel extends AndroidViewModel {
             messageList.setValue(result);
         }
     }
-    // 把数据库里的备注和置顶状态同步到内存列表里
+    // 同步数据库的备注/置顶，以及同步内存里的最新消息内容
     private void fillRemarks(List<Message> list) {
         if (list == null) return;
 
         try {
             for (Message msg : list) {
+                String nickname = msg.getNickname();
+
+                // 同步 SQLite 数据 (备注、置顶)
                 if (dbHelper != null) {
-                    // 读取备注
-                    String remark = dbHelper.getRemark(msg.getNickname());
+                    String remark = dbHelper.getRemark(nickname);
                     msg.setLocalRemark(remark);
-                    // 读取置顶状态
-                    boolean pinned = dbHelper.isPinned(msg.getNickname());
+
+                    boolean pinned = dbHelper.isPinned(nickname);
                     msg.setPinned(pinned);
                 }
+
+                // 同步 ChatDataHelper 里的最新内容
+                Message lastMsg = com.bytedance.mydouyin.model.ChatDataHelper.getLastMessage(nickname);
+
+                if (lastMsg != null) {
+                    // 更新摘要
+                    msg.setContent(lastMsg.getContent());
+                    // 更新时间
+                    msg.setTime(lastMsg.getTime());
+
+                    // 未读数清零
+                    if (lastMsg.isSelf()) {
+                        msg.setUnreadCount(0);
+                    }
+                }
             }
+            // 排序
             sortMessages(list);
+
         } catch (Exception e) {
-            // 如果发生了并发修改异常，说明刚才正好有新消息进来。
-            // 直接忽略这次错误，界面马上会收到新消息的通知再次刷新。
             e.printStackTrace();
         }
     }
     // 加载数据的方法
+    // 加载数据 (含弱网模拟)
     public void loadData() {
-        // 拉取最新全量数据
-        allMessages = readJsonFromAssets();
-        fillRemarks(allMessages);
-        // 把 JSON 里读到的所有头像，预存到 ChatDataHelper 的缓存里
-        if (allMessages != null) {
-            for (Message msg : allMessages) {
-                com.bytedance.mydouyin.model.ChatDataHelper.saveAvatarInfo(msg);
+        // 切换到 Loading 状态 (显示骨架屏)
+        pageState.setValue(STATE_LOADING);
+
+        new Thread(() -> {
+            try {
+                // 模拟弱网/超时：强制等待 5 秒
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }
-        // 截取前 20 条展示
-        List<Message> firstPage = new ArrayList<>();
-        int count = Math.min(20, allMessages.size());
 
-        for (int i = 0; i < count; i++) {
-            firstPage.add(allMessages.get(i));
-        }
+            // 模拟首次失败逻辑
+            if (isFirstLoad) {
+                isFirstLoad = false; // 标记下次成功
+                // 切换到 Error 状态
+                pageState.postValue(STATE_ERROR);
+                return; // 中断加载
+            }
 
-        messageList.setValue(firstPage);
-        // 开始模拟消息
-        startMessageSimulation();
+            // 拉取最新全量数据
+            allMessages = readJsonFromAssets();
+            fillRemarks(allMessages);
+
+            if (allMessages != null) {
+                for (Message msg : allMessages) {
+                    com.bytedance.mydouyin.model.ChatDataHelper.saveAvatarInfo(msg);
+                }
+            }
+
+            // 截取前 20 条
+            List<Message> firstPage = new ArrayList<>();
+            int count = Math.min(20, allMessages != null ? allMessages.size() : 0);
+            if (allMessages != null) {
+                for (int i = 0; i < count; i++) {
+                    firstPage.add(allMessages.get(i));
+                }
+            }
+
+            // 发送数据并切换到 Content 状态
+            messageList.postValue(firstPage);
+            pageState.postValue(STATE_CONTENT);
+
+            // 开始后台模拟
+            startMessageSimulation();
+
+        }).start();
     }
 
     // 模拟下拉更新数据

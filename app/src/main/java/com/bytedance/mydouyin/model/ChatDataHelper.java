@@ -158,4 +158,13 @@ public class ChatDataHelper {
         }
         return null;
     }
+    //获取指定联系人的最后一条消息，用于列表页刷新摘要
+    public static Message getLastMessage(String nickname) {
+        List<Message> list = chatStore.get(nickname);
+        if (list != null && !list.isEmpty()) {
+            // 返回 List 的最后一个元素
+            return list.get(list.size() - 1);
+        }
+        return null;
+    }
 }
