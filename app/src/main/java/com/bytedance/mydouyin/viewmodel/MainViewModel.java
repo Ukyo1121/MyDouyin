@@ -510,7 +510,6 @@ public class MainViewModel extends AndroidViewModel {
         messageList.setValue(result);
     }
     // 通用过滤方法
-    // 通用的过滤方法 (支持高亮历史记录)
     private List<Message> filterList(List<Message> sourceList, String keyword) {
         List<Message> result = new ArrayList<>();
         if (sourceList == null) return result;
@@ -536,11 +535,11 @@ public class MainViewModel extends AndroidViewModel {
                     result.add(msg);
                 }
                 else {
-                    // 2. 如果主要信息不匹配，去查历史记录对象
+                    // 如果主要信息不匹配，去查历史记录对象
                     Message historyMsg = com.bytedance.mydouyin.model.ChatDataHelper.getMatchedMessage(msg, key);
 
                     if (historyMsg != null) {
-                        // 找到了历史匹配！创建替身用于展示
+                        // 找到了历史匹配，创建替身用于展示
                         Message tempMsg = new Message();
 
                         // A. 身份信息：复制当前联系人的 (保持头像、昵称是这个人的)
@@ -554,10 +553,10 @@ public class MainViewModel extends AndroidViewModel {
                         tempMsg.setAvatarUrl(msg.getAvatarUrl());
                         tempMsg.setAvatarName(msg.getAvatarName());
 
-                        // B. 展示内容：复制历史记录的真实数据！
+                        // B. 展示内容：复制历史记录的真实数据
                         tempMsg.setContent(historyMsg.getContent()); // 显示搜到的那句话
 
-                        // 【核心修改】使用历史记录的真实时间！
+                        // 使用历史记录的真实时间
                         tempMsg.setTime(historyMsg.getTime());
 
                         tempMsg.setType(Message.TYPE_TEXT);
